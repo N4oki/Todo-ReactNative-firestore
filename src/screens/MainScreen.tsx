@@ -1,8 +1,13 @@
 import React from 'react';
-import {Platform, UIManager, ScrollView} from 'react-native';
-import {Center, KeyboardAvoidingView} from 'native-base';
+import {
+  Platform,
+  UIManager,
+  ScrollView,
+  KeyboardAvoidingView,
+  View,
+} from 'react-native';
 
-import NavBar from '../components/navbar/NavBar';
+import Navbar from '../components/navbar/Navbar';
 import TaskCard from '../components/taskCard/TaskCard';
 import TaskInput from '../components/taskInput/TaskInput';
 import {useAppContext} from '../utils/context';
@@ -20,8 +25,12 @@ const MainScreen = () => {
   const colorScheme = getColorScheme().colorScheme;
 
   return (
-    <Center flex={1} bgColor={colorScheme === 'dark' ? '#2B2B2B' : '#E2E2E2'}>
-      <NavBar />
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colorScheme === 'dark' ? '#2B2B2B' : '#E2E2E2',
+      }}>
+      <Navbar />
       <KeyboardAvoidingView
         style={{flex: 1, width: '100%'}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -37,7 +46,7 @@ const MainScreen = () => {
 
         <TaskInput />
       </KeyboardAvoidingView>
-    </Center>
+    </View>
   );
 };
 

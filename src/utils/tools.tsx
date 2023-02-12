@@ -7,11 +7,12 @@ export const getSelectedItem = (
     isChecked: boolean;
   }[],
 ): string => {
-  const selectedColor = data.find(item => item.isChecked)?.item;
-  if (selectedColor) {
-    return selectedColor;
+  let selectedItem = data.filter(item => item.isChecked);
+  if (selectedItem.length !== 1) {
+    throw new Error('No selected item or multiple items chosen');
   }
-  return data[0].item;
+
+  return selectedItem[0].item;
 };
 
 export const sortTaskArray = (array: taskData[]) => {
@@ -41,6 +42,7 @@ export const getColorScheme = () => {
   let inputBg = colorScheme === 'dark' ? '#949696' : '#F1F5F9';
   let textColor = colorScheme === 'dark' ? '#E0E1E1' : '#000000';
   let navbarBg = colorScheme === 'dark' ? '#2B2B2B' : '#E2E2E2';
+
   return {
     colorScheme: colorScheme,
     colors: {keyboardBg, inputBg, textColor, navbarBg},

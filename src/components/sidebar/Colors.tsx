@@ -1,16 +1,25 @@
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {HStack} from 'native-base';
 import CheckBox from '../taskCard/CheckBox';
 import {userThemeProps} from './UserThemePicker';
 
-const Colors = ({itemArray, dimension, setSelectedItem}: userThemeProps) => {
+const Colors = ({
+  itemArray,
+  dimension,
+  setSelectedItem,
+  gap,
+}: userThemeProps) => {
   return (
-    <HStack flexWrap="wrap" space="2">
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: gap,
+        marginBottom: 8,
+      }}>
       {itemArray.map((data, index) => {
         return (
           <TouchableOpacity
-            style={{marginVertical: 2}}
             key={`${data.item}${index}`}
             onPress={() => {
               if (data.isChecked) return;
@@ -28,7 +37,7 @@ const Colors = ({itemArray, dimension, setSelectedItem}: userThemeProps) => {
           </TouchableOpacity>
         );
       })}
-    </HStack>
+    </View>
   );
 };
 

@@ -1,4 +1,3 @@
-import {NativeBaseProvider} from 'native-base';
 import React, {
   createContext,
   Dispatch,
@@ -48,9 +47,7 @@ export const AppWrapper = ({children}: {children: ReactNode}) => {
     setUserData,
   };
   return (
-    <NativeBaseProvider>
-      <AppContext.Provider value={sharedState}>{children}</AppContext.Provider>
-    </NativeBaseProvider>
+    <AppContext.Provider value={sharedState}>{children}</AppContext.Provider>
   );
 };
 

@@ -13,23 +13,24 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
 const AnimatedProgressText = () => {
   const {taskData, userData} = useAppContext();
+  let percentageNumber = getPercentage(taskData) * 100;
 
-  const percentage = useSharedValue(getPercentage(taskData));
+  const percentage = useSharedValue(percentageNumber);
 
   useEffect(() => {
-    percentage.value = withTiming(getPercentage(taskData), {duration: 1000});
+    percentage.value = withTiming(percentageNumber, {duration: 1000});
   }, [taskData]);
 
   const animatedProps = useAnimatedProps(() => {
     return {
-      text: `${Math.floor(percentage.value * 100)}%`,
+      text: `${Math.floor(percentage.value)}%`,
     } as Partial<AnimateProps<TextInputProps>>;
   });
 
   return (
     <AnimatedText
       editable={false}
-      value={`${Math.floor(percentage.value * 100)}%`}
+      value={`${Math.floor(percentage.value)}%`}
       style={{
         width: '100%',
         fontSize: 30,

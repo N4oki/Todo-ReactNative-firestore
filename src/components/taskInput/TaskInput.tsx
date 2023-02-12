@@ -1,6 +1,11 @@
 import React, {useState, useRef} from 'react';
-import {Box, HStack} from 'native-base';
-import {KeyboardAvoidingView, SafeAreaView, TextInput} from 'react-native';
+
+import {
+  KeyboardAvoidingView,
+  SafeAreaView,
+  TextInput,
+  View,
+} from 'react-native';
 import uuid from 'react-native-uuid';
 
 import Animated, {Layout} from 'react-native-reanimated';
@@ -10,7 +15,6 @@ import AddButton from './AddButton';
 import SendButton from './SendButton';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-const InputContainer = Animated.createAnimatedComponent(HStack);
 
 const TaskInput = () => {
   const {setTaskData} = useAppContext();
@@ -51,19 +55,21 @@ const TaskInput = () => {
           bottom: 0,
         }}
         behavior="position">
-        <Box
+        <View
           style={{
             backgroundColor: focus ? keyboardBg : 'transparent',
           }}>
-          <InputContainer
+          <Animated.View
             layout={Layout.duration(300).damping(15).springify()}
-            rounded="lg"
             style={{
+              display: 'flex',
+              flexDirection: 'row',
               backgroundColor: inputBg,
               width: focus ? '90%' : '70%',
               margin: 5,
               marginLeft: 'auto',
               marginRight: 'auto',
+              borderRadius: 10,
             }}>
             {!focus && (
               <AddButton textColor={textColor} onPress={onAddButtonClick} />
@@ -94,8 +100,8 @@ const TaskInput = () => {
                 textColor={textColor}
               />
             )}
-          </InputContainer>
-        </Box>
+          </Animated.View>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

@@ -1,10 +1,21 @@
 import React from 'react';
-import {HStack, Pressable, Text} from 'native-base';
 import {userThemeProps} from './UserThemePicker';
+import {View, Text, Pressable} from 'react-native';
 
-const Icons = ({itemArray, dimension, setSelectedItem}: userThemeProps) => {
+const Icons = ({
+  itemArray,
+  dimension,
+  setSelectedItem,
+  gap,
+}: userThemeProps) => {
   return (
-    <HStack flexWrap="wrap" space={2}>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: gap,
+        marginBottom: 8,
+      }}>
       {itemArray.map((data, index) => {
         return (
           <Pressable
@@ -13,29 +24,27 @@ const Icons = ({itemArray, dimension, setSelectedItem}: userThemeProps) => {
               if (data.isChecked) return;
               setSelectedItem(data.item, 'icon');
             }}>
-            {({isPressed}) => {
-              return (
-                <Text
-                  style={{
-                    transform: [
-                      {
-                        scale: isPressed ? 0.96 : 1,
-                      },
-                    ],
-                  }}
-                  fontSize={30}
-                  width={dimension}
-                  height={dimension}
-                  lineHeight={40}
-                  textAlign="center">
-                  {data.item}
-                </Text>
-              );
-            }}
+            {({pressed}) => (
+              <Text
+                style={[
+                  {
+                    transform: [{scale: pressed ? 0.96 : 1}],
+                  },
+                  {
+                    fontSize: 30,
+                    width: dimension,
+                    height: dimension,
+                    lineHeight: 40,
+                    textAlign: 'center',
+                  },
+                ]}>
+                {data.item}
+              </Text>
+            )}
           </Pressable>
         );
       })}
-    </HStack>
+    </View>
   );
 };
 

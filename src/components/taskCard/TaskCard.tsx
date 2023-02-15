@@ -1,6 +1,12 @@
 import React, {useState} from 'react';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {Dimensions, TouchableOpacity, View, TextInput} from 'react-native';
+import {
+  Dimensions,
+  TouchableOpacity,
+  View,
+  TextInput,
+  Button,
+} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -164,7 +170,7 @@ const TaskCard = ({task}: {task: taskData}) => {
       <GestureDetector gesture={gesture}>
         <Animated.View style={moveXStyle}>
           <View style={{display: 'flex', flexDirection: 'row'}}>
-            <TouchableOpacity onPress={check}>
+            <TouchableOpacity onPress={check} testID="pressableCheckBox">
               <CheckBox
                 isChecked={checked}
                 boxFillColor={getSelectedItem(userData.color)}

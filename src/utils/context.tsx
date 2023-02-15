@@ -36,7 +36,13 @@ const initialData = [
 
 const AppContext = createContext<appContextValue | undefined>(undefined);
 
-export const AppWrapper = ({children}: {children: ReactNode}) => {
+export const AppWrapper = ({
+  children,
+  testValue,
+}: {
+  children: ReactNode;
+  testValue?: appContextValue;
+}) => {
   const [taskData, setTaskData] = useState(initialData);
   const [userData, setUserData] = useState(INITIAL_DATA);
 
@@ -46,8 +52,11 @@ export const AppWrapper = ({children}: {children: ReactNode}) => {
     userData,
     setUserData,
   };
+
   return (
-    <AppContext.Provider value={sharedState}>{children}</AppContext.Provider>
+    <AppContext.Provider value={testValue || sharedState}>
+      {children}
+    </AppContext.Provider>
   );
 };
 

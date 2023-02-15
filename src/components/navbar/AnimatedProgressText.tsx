@@ -29,6 +29,7 @@ const AnimatedProgressText = () => {
 
   return (
     <AnimatedText
+      testID="animatedText"
       editable={false}
       value={`${Math.floor(percentage.value)}%`}
       style={{

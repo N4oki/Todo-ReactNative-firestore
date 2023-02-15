@@ -75,11 +75,11 @@ const TaskInput = () => {
               <AddButton textColor={textColor} onPress={onAddButtonClick} />
             )}
             <AnimatedTextInput
-              layout={Layout.duration(100).delay(100).damping(15).springify()}
+              layout={Layout.duration(100).damping(15).springify().delay(100)}
               placeholder="Add your task"
               placeholderTextColor={textColor}
-              onChangeText={taskValue => setTaskValue(taskValue)}
-              defaultValue={taskValue}
+              onChangeText={text => setTaskValue(text)}
+              value={taskValue}
               ref={inputRef}
               style={{
                 flex: 1,

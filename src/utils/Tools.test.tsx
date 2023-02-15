@@ -9,8 +9,8 @@ import {
   sortTaskArray,
   getPercentage,
   getColorScheme,
-} from '../src/utils/tools';
-import {taskData} from '../src/utils/context';
+} from './tools';
+import {taskData} from './context';
 
 const mockedUseColorScheme = jest.fn().mockReturnValue('dark');
 

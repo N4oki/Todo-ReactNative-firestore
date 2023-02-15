@@ -19,6 +19,7 @@ const SendButton = ({
         alignItems: 'center',
         padding: 10,
       }}
+      testID="submitButton"
       onPress={() => onPress(taskValue)}>
       <CustomIcon name="send" dir="FontAwesome" color={textColor} />
     </Pressable>

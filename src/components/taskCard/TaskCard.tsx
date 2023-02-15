@@ -1,7 +1,12 @@
 import React, {useState} from 'react';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {HStack, Input, useColorMode} from 'native-base';
-import {Dimensions, TouchableOpacity, useColorScheme} from 'react-native';
+import {
+  Dimensions,
+  TouchableOpacity,
+  View,
+  TextInput,
+  Button,
+} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -164,8 +169,8 @@ const TaskCard = ({task}: {task: taskData}) => {
 
       <GestureDetector gesture={gesture}>
         <Animated.View style={moveXStyle}>
-          <HStack>
-            <TouchableOpacity onPress={check}>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <TouchableOpacity onPress={check} testID="pressableCheckBox">
               <CheckBox
                 isChecked={checked}
                 boxFillColor={getSelectedItem(userData.color)}
@@ -176,20 +181,21 @@ const TaskCard = ({task}: {task: taskData}) => {
               />
             </TouchableOpacity>
             <Animated.View style={[AnimatedOpacity, translateXStyle]}>
-              <Input
-                fontSize={25}
+              <TextInput
+                style={{
+                  fontSize: 25,
+                  width: SCREEN_WIDTH * 0.8,
+                  padding: 0,
+                  marginLeft: 2,
+                  color: textColor,
+                }}
                 placeholder="Type your task"
                 placeholderTextColor={textColor}
                 value={taskValue}
-                width={SCREEN_WIDTH * 0.8}
-                variant="unstyled"
                 onChangeText={text => setTaskValue(text)}
-                padding="0"
-                marginLeft={2}
-                color={textColor}
               />
             </Animated.View>
-          </HStack>
+          </View>
         </Animated.View>
       </GestureDetector>
       {isOver ? <TrashBin /> : null}

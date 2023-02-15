@@ -1,4 +1,3 @@
-import {NativeBaseProvider} from 'native-base';
 import React, {
   createContext,
   Dispatch,
@@ -37,7 +36,13 @@ const initialData = [
 
 const AppContext = createContext<appContextValue | undefined>(undefined);
 
-export const AppWrapper = ({children}: {children: ReactNode}) => {
+export const AppWrapper = ({
+  children,
+  testValue,
+}: {
+  children: ReactNode;
+  testValue?: appContextValue;
+}) => {
   const [taskData, setTaskData] = useState(initialData);
   const [userData, setUserData] = useState(INITIAL_DATA);
 
@@ -47,10 +52,11 @@ export const AppWrapper = ({children}: {children: ReactNode}) => {
     userData,
     setUserData,
   };
+
   return (
-    <NativeBaseProvider>
-      <AppContext.Provider value={sharedState}>{children}</AppContext.Provider>
-    </NativeBaseProvider>
+    <AppContext.Provider value={testValue || sharedState}>
+      {children}
+    </AppContext.Provider>
   );
 };
 

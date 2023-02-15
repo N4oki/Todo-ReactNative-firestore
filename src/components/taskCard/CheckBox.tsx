@@ -25,7 +25,6 @@ interface AnimatedStrokeProps {
   width: number;
   height: number;
   margin: number;
-  size?: number;
 }
 
 const CheckBox = ({
@@ -36,12 +35,8 @@ const CheckBox = ({
   width,
   height,
   margin,
-  size,
 }: AnimatedStrokeProps) => {
   const checkBoxProgress = useSharedValue(0);
-
-  const aspect = width / height;
-  const adjustedHeight = Math.ceil(width / aspect);
 
   useEffect(() => {
     checkBoxProgress.value = withDelay(

@@ -63,4 +63,3 @@ yarn-error.log
 .metro-health-check*
 
 coverage/
-.vscode

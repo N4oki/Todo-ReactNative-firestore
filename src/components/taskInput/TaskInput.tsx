@@ -9,7 +9,6 @@ import {
 import uuid from 'react-native-uuid';
 
 import Animated, {Layout} from 'react-native-reanimated';
-import {useAppContext} from '../../utils/context';
 import {getColorScheme} from '../../utils/tools';
 import AddButton from './AddButton';
 import SendButton from './SendButton';
@@ -30,17 +29,12 @@ const TaskInput = () => {
 
   const onPress = async (taskValue: string) => {
     if (!taskValue) return;
-
-    // setTaskData(prev => {
-    //   const newItem = {
-    //     id: uuid.v4(),
-    //     title: taskValue,
-    //     isDone: false,
-    //   };
-    //   return [newItem, ...prev];
-    // });
-
-    const newData = {id: uuid.v4(), title: taskValue, isDone: false};
+    const newData = {
+      title: taskValue,
+      id: uuid.v4(),
+      isDone: false,
+      date: new Date(),
+    };
 
     await ref.add(newData);
     setTaskValue('');

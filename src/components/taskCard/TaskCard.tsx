@@ -13,12 +13,9 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 
 import CheckBox from './CheckBox';
 import TrashBin from './TrashBin';
-import {
-  getColorScheme,
-  getSelectedItem,
-  sortTaskArray,
-} from '../../utils/tools';
+import {getColorScheme, getSelectedItem} from '../../utils/tools';
 import {useAppContext, taskData} from '../../utils/context';
+import firestore from '@react-native-firebase/firestore';
 
 const options = {
   enableVibrateFallback: true,
@@ -31,7 +28,7 @@ const MARGIN = 10;
 const THRESHOLD = -SCREEN_WIDTH * 0.1;
 
 const TaskCard = ({task}: {task: taskData}) => {
-  let {userData, taskData, setTaskData} = useAppContext();
+  let {userData} = useAppContext();
   const [isOver, setIsOver] = useState(false);
 
   const opacity =
@@ -56,24 +53,19 @@ const TaskCard = ({task}: {task: taskData}) => {
     };
   });
 
-  const check = () => {
+  const check = async () => {
     if (!task.id) return;
 
     ReactNativeHapticFeedback.trigger('impactLight', options);
-    opacity.value = withDelay(
-      1000,
-      withTiming(task.isDone === false ? 0.7 : 1),
-    );
+    opacity.value = withDelay(500, withTiming(task.isDone === false ? 0.7 : 1));
 
-    setTaskData(prev => {
-      const newData = prev.map(item => {
-        if (item.id === task.id) {
-          return {id: item.id, title: item.title, isDone: !item.isDone};
-        }
-        return item;
-      });
-      return sortTaskArray(newData);
+    await firestore().collection('todos').doc(task.id.toString()).update({
+      isDone: !task.isDone,
     });
+  };
+
+  const deleteItem = async (id: string) => {
+    await firestore().collection('todos').doc(id).delete();
   };
 
   const gesture = useMemo(
@@ -107,8 +99,7 @@ const TaskCard = ({task}: {task: taskData}) => {
               750,
               withTiming(0, undefined, isFinished => {
                 if (isFinished) {
-                  const newData = taskData.filter(item => item.id !== task.id);
-                  runOnJS(setTaskData)(newData);
+                  runOnJS(deleteItem)(task.id.toString());
                 }
               }),
             );
@@ -117,7 +108,7 @@ const TaskCard = ({task}: {task: taskData}) => {
             runOnJS(setIsOver)(false);
           }
         }),
-    [taskData, setTaskData],
+    [],
   );
 
   return (

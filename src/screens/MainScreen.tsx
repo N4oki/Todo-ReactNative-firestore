@@ -12,21 +12,22 @@ import TaskCard from '../components/taskCard/TaskCard';
 import TaskInput from '../components/taskInput/TaskInput';
 import {taskData} from '../utils/context';
 import Animated, {FadeIn, Layout} from 'react-native-reanimated';
-import {getColorScheme} from '../utils/tools';
+import {getColorScheme, sortTaskArray} from '../utils/tools';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
 
 const MainScreen = () => {
   const [taskData, setTaskData] = useState<taskData[]>([]);
-  const ref = firestore().collection('todos');
+  const ref = firestore().collection('todos').orderBy('date', 'desc');
 
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
       const taskData = querySnapshot.docs.map(item => {
-        const {title, isDone} = item.data();
-        return {id: item.id, title, isDone};
+        const {title, isDone, date} = item.data();
+        return {id: item.id, title, isDone, date};
       });
-      setTaskData(taskData);
+
+      setTaskData(sortTaskArray(taskData));
     });
   }, []);
 
@@ -53,8 +54,8 @@ const MainScreen = () => {
             {taskData.map((item, index) => (
               <Animated.View
                 key={item.id.toString()}
-                entering={FadeIn.duration(500).delay(300)}
-                layout={Layout.duration(500 + index * 100)}>
+                entering={FadeIn.duration(300)}
+                layout={Layout.duration(300)}>
                 <TaskCard task={item} />
               </Animated.View>
             ))}

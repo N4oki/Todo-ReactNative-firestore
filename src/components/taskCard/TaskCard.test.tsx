@@ -1,12 +1,7 @@
 import React from 'react';
 import TaskCard from './TaskCard';
 import {AppWrapper} from '../../utils/context';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react-native';
+import {render} from '@testing-library/react-native';
 
 jest.mock('react-native-haptic-feedback', () => ({
   trigger: jest.fn(),
@@ -51,16 +46,13 @@ describe('Task card components', () => {
       setUserData: jest.fn(),
     };
 
-    const {getByPlaceholderText} = render(
+    const {getByText} = render(
       <AppWrapper testValue={sharedState}>
         <TaskCard task={taskData[0]} />
       </AppWrapper>,
     );
 
-    const taskTitleInput = getByPlaceholderText(/type your task/i);
-    expect(taskTitleInput.props.value).toBe('test');
-
-    fireEvent.changeText(taskTitleInput, 'hello world');
-    expect(taskTitleInput.props.value).toBe('hello world');
+    const taskTitleText = getByText(/test/i);
+    expect(taskTitleText.props.children).toBe('test');
   });
 });

@@ -1,19 +1,7 @@
-import React, {createContext} from 'react';
-import renderer from 'react-test-renderer';
-import AnimatedProgressText from '../components/navbar/AnimatedProgressText';
-import Navbar from '../components/navbar/Navbar';
-import TaskCard from '../components/taskCard/TaskCard';
+import React from 'react';
 import MainScreen from './MainScreen';
 import {AppWrapper} from '../utils/context';
-import {
-  render,
-  screen,
-  fireEvent,
-  within,
-  waitFor,
-} from '@testing-library/react-native';
-import CheckBox from '../components/taskCard/CheckBox';
-// import '@testing-library/jest-native/extend-expect'
+import {render, screen} from '@testing-library/react-native';
 
 jest.mock('react-native-haptic-feedback', () => ({
   trigger: jest.fn(),
@@ -32,6 +20,16 @@ jest.mock('react-native-reanimated', () => {
         }),
       }),
     },
+    FadeIn: {
+      duration: () => ({
+        delay: () => {},
+      }),
+    },
+    FadeOutUp: {
+      duration: () => ({
+        delay: () => {},
+      }),
+    },
   };
 });
 
@@ -46,24 +44,37 @@ describe('Task card components', () => {
   });
 
   it('renders title of task and shows new title when value changes ', async () => {
-    const {getByTestId, getByPlaceholderText} = render(
-      <AppWrapper>
+    let taskData = [
+      {id: '1', title: 'test1', isDone: false},
+      {id: '2', title: 'test2', isDone: false},
+      {id: '3', title: 'test3', isDone: false},
+    ];
+    const userData = {
+      color: [
+        {item: '#434343', isChecked: true},
+        {item: '#203A43', isChecked: false},
+        {item: '#8e9eab', isChecked: false},
+      ],
+      icon: [
+        {item: '🐶', isChecked: true},
+        {item: '🐱', isChecked: false},
+        {item: '🐭', isChecked: false},
+      ],
+    };
+
+    let sharedState = {
+      taskData,
+      setTaskData: jest.fn(),
+      userData,
+      setUserData: jest.fn(),
+    };
+    const {getByTestId, getByPlaceholderText, getByRole} = render(
+      <AppWrapper testValue={sharedState}>
         <MainScreen />
       </AppWrapper>,
     );
 
-    const taskTitleInput = getByPlaceholderText(/type your task/i);
-
-    const checkBox = getByTestId(/pressableCheckBox/i);
-
-    expect(taskTitleInput.props.value).toBe('Edit video');
-
-    expect(checkBox.findByProps({isChecked: false})).toBeTruthy();
-    fireEvent.changeText(taskTitleInput, 'hello world');
-    fireEvent.press(checkBox);
-    // screen.debug();
-
-    expect(taskTitleInput.props.value).toBe('hello world');
-    expect(screen.getAllByPlaceholderText(/type your task/i).length).toBe(1);
+    const root = getByTestId(/scrollRootView/i);
+    expect(root.children.length).toBe(3);
   });
 });

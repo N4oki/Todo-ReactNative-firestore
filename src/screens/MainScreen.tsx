@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   View,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 
 import Navbar from '../components/navbar/Navbar';
@@ -19,8 +20,10 @@ const MainScreen = () => {
   const {taskData} = useAppContext();
   const colorScheme = getColorScheme().colorScheme;
 
-  const Height =
-    Dimensions.get('window').height - Dimensions.get('window').height * 0.3;
+  const screenHeight = Dimensions.get('screen').height;
+  const windowHeight = Dimensions.get('window').height;
+  const scrollViewHeight =
+    screenHeight - windowHeight + (StatusBar.currentHeight || 0);
 
   return (
     <View
@@ -32,7 +35,7 @@ const MainScreen = () => {
 
       <ScrollView>
         <GestureHandlerRootView
-          style={{height: Height}}
+          style={{height: scrollViewHeight}}
           testID="scrollRootView">
           {taskData.map(item => (
             <Animated.View

@@ -1,14 +1,30 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import MainScreen from './src/screens/MainScreen';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 import SideBar from './src/screens/SideBar';
-import {Dimensions, Pressable, SafeAreaView, Platform} from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  SafeAreaView,
+  Platform,
+  Button,
+} from 'react-native';
 import {AppWrapper} from './src/utils/context';
 import CustomIcon from './src/utils/CustomIcon';
 import 'react-native-gesture-handler';
 import AndroidDrawerLayout from './src/screens/AndroidDrawerLayout';
 
+import fireStore from '@react-native-firebase/firestore';
+
 const WIDTH = Dimensions.get('window').width;
+
+// const addTodo = async (todo: {
+//   id: string;
+//   title: string;
+//   isFinished: boolean;
+// }) => {
+//   await ref.add(todo);
+// };
 
 export default function App() {
   const drawerRef = useRef<DrawerLayout>(null);

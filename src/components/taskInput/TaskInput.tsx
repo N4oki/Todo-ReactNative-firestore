@@ -13,11 +13,12 @@ import {useAppContext} from '../../utils/context';
 import {getColorScheme} from '../../utils/tools';
 import AddButton from './AddButton';
 import SendButton from './SendButton';
+import firestore from '@react-native-firebase/firestore';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const TaskInput = () => {
-  const {setTaskData} = useAppContext();
+  const ref = firestore().collection('todos');
   const [taskValue, setTaskValue] = useState('');
   const [focus, setFocus] = useState(false);
   const inputRef = useRef<TextInput>(null);
@@ -27,17 +28,21 @@ const TaskInput = () => {
   const letters = new RegExp(/[^ ]/);
   const valid = letters.test(taskValue) ? true : false;
 
-  const onPress = (taskValue: string) => {
+  const onPress = async (taskValue: string) => {
     if (!taskValue) return;
 
-    setTaskData(prev => {
-      const newItem = {
-        id: uuid.v4(),
-        title: taskValue,
-        isDone: false,
-      };
-      return [newItem, ...prev];
-    });
+    // setTaskData(prev => {
+    //   const newItem = {
+    //     id: uuid.v4(),
+    //     title: taskValue,
+    //     isDone: false,
+    //   };
+    //   return [newItem, ...prev];
+    // });
+
+    const newData = {id: uuid.v4(), title: taskValue, isDone: false};
+
+    await ref.add(newData);
     setTaskValue('');
   };
 

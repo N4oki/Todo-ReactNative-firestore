@@ -30,24 +30,23 @@ const MainScreen = () => {
       }}>
       <Navbar />
 
-      <KeyboardAvoidingView
-        style={{flex: 1, width: '100%'}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView>
-          <GestureHandlerRootView
-            style={{height: Height}}
-            testID="scrollRootView">
-            {taskData.map(item => (
-              <Animated.View
-                key={item.id.toString()}
-                entering={FadeIn.duration(300)}
-                layout={Layout.duration(300)}>
-                <TaskCard task={item} />
-              </Animated.View>
-            ))}
-          </GestureHandlerRootView>
-        </ScrollView>
+      <ScrollView>
+        <GestureHandlerRootView
+          style={{height: Height}}
+          testID="scrollRootView">
+          {taskData.map(item => (
+            <Animated.View
+              key={item.id.toString()}
+              entering={FadeIn.duration(300)}
+              layout={Layout.duration(300)}>
+              <TaskCard task={item} />
+            </Animated.View>
+          ))}
+        </GestureHandlerRootView>
+      </ScrollView>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TaskInput />
       </KeyboardAvoidingView>
     </View>

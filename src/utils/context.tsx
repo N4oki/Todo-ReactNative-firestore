@@ -4,10 +4,12 @@ import React, {
   ReactNode,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import {INITIAL_DATA} from '../data/constants';
-import uuid from 'react-native-uuid';
+import firestore from '@react-native-firebase/firestore';
+import {sortTaskArray} from './tools';
 
 export type taskData = {
   id: string | number[];
@@ -20,19 +22,10 @@ export type userData = {
   icon: {item: string; isChecked: boolean}[];
 };
 export interface appContextValue {
+  taskData: taskData[];
   userData: userData;
   setUserData: Dispatch<SetStateAction<userData>>;
-  taskData: taskData[];
-  setTaskData: Dispatch<SetStateAction<taskData[]>>;
 }
-
-const initialData = [
-  {
-    id: uuid.v4(),
-    title: 'Edit video',
-    isDone: false,
-  },
-];
 
 const AppContext = createContext<appContextValue | undefined>(undefined);
 
@@ -43,12 +36,24 @@ export const AppWrapper = ({
   children: ReactNode;
   testValue?: appContextValue;
 }) => {
-  const [taskData, setTaskData] = useState(initialData);
   const [userData, setUserData] = useState(INITIAL_DATA);
+  const [taskData, setTaskData] = useState<taskData[]>([]);
+
+  const ref = firestore().collection('todos').orderBy('date', 'desc');
+
+  useEffect(() => {
+    return ref.onSnapshot(querySnapshot => {
+      const taskData = querySnapshot.docs.map(item => {
+        const {title, isDone, date} = item.data();
+        return {id: item.id, title, isDone, date};
+      });
+
+      setTaskData(sortTaskArray(taskData));
+    });
+  }, []);
 
   let sharedState = {
     taskData,
-    setTaskData,
     userData,
     setUserData,
   };

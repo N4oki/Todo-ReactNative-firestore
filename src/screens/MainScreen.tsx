@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   Platform,
   ScrollView,
@@ -10,27 +10,13 @@ import {
 import Navbar from '../components/navbar/Navbar';
 import TaskCard from '../components/taskCard/TaskCard';
 import TaskInput from '../components/taskInput/TaskInput';
-import {taskData} from '../utils/context';
+import {useAppContext} from '../utils/context';
 import Animated, {FadeIn, Layout} from 'react-native-reanimated';
-import {getColorScheme, sortTaskArray} from '../utils/tools';
+import {getColorScheme} from '../utils/tools';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import firestore from '@react-native-firebase/firestore';
 
 const MainScreen = () => {
-  const [taskData, setTaskData] = useState<taskData[]>([]);
-  const ref = firestore().collection('todos').orderBy('date', 'desc');
-
-  useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      const taskData = querySnapshot.docs.map(item => {
-        const {title, isDone, date} = item.data();
-        return {id: item.id, title, isDone, date};
-      });
-
-      setTaskData(sortTaskArray(taskData));
-    });
-  }, []);
-
+  const {taskData} = useAppContext();
   const colorScheme = getColorScheme().colorScheme;
 
   const Height =
@@ -51,7 +37,7 @@ const MainScreen = () => {
           <GestureHandlerRootView
             style={{height: Height}}
             testID="scrollRootView">
-            {taskData.map((item, index) => (
+            {taskData.map(item => (
               <Animated.View
                 key={item.id.toString()}
                 entering={FadeIn.duration(300)}

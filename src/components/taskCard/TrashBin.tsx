@@ -24,16 +24,18 @@ const TrashBin = () => {
         {
           height: 40,
           width: 40,
+          marginVertical: 10,
           position: 'absolute',
           top: 0,
-          right: 0,
+          right: 10,
+          display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         },
         AnimatedOpacity,
       ]}
       entering={FadeInRight.duration(500)}
-      exiting={FadeOutRight}
+      exiting={FadeOutRight.duration(250)}
       onLayout={() =>
         ReactNativeHapticFeedback.trigger('impactLight', options)
       }>

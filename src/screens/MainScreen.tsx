@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Platform,
   ScrollView,
@@ -10,27 +10,28 @@ import {
 import Navbar from '../components/navbar/Navbar';
 import TaskCard from '../components/taskCard/TaskCard';
 import TaskInput from '../components/taskInput/TaskInput';
-import {useAppContext} from '../utils/context';
-import Animated, {FadeIn, FadeOutUp, Layout} from 'react-native-reanimated';
+import {taskData} from '../utils/context';
+import Animated, {FadeIn, Layout} from 'react-native-reanimated';
 import {getColorScheme} from '../utils/tools';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
 
 const MainScreen = () => {
+  const [taskData, setTaskData] = useState<taskData[]>([]);
   const ref = firestore().collection('todos');
 
-  const addTodo = async (todo: {
-    id: string;
-    title: string;
-    isFinished: boolean;
-  }) => {
-    await ref.add(todo);
-  };
-
-  const {taskData} = useAppContext();
-  const initialData = [{id: 'initialData', title: 'Edit Video', isDone: true}];
+  useEffect(() => {
+    return ref.onSnapshot(querySnapshot => {
+      const taskData = querySnapshot.docs.map(item => {
+        const {title, isDone} = item.data();
+        return {id: item.id, title, isDone};
+      });
+      setTaskData(taskData);
+    });
+  }, []);
 
   const colorScheme = getColorScheme().colorScheme;
+
   const Height =
     Dimensions.get('window').height - Dimensions.get('window').height * 0.3;
 

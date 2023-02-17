@@ -14,17 +14,7 @@ import CustomIcon from './src/utils/CustomIcon';
 import 'react-native-gesture-handler';
 import AndroidDrawerLayout from './src/screens/AndroidDrawerLayout';
 
-import fireStore from '@react-native-firebase/firestore';
-
 const WIDTH = Dimensions.get('window').width;
-
-// const addTodo = async (todo: {
-//   id: string;
-//   title: string;
-//   isFinished: boolean;
-// }) => {
-//   await ref.add(todo);
-// };
 
 export default function App() {
   const drawerRef = useRef<DrawerLayout>(null);

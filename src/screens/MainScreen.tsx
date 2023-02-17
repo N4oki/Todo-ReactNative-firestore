@@ -14,9 +14,22 @@ import {useAppContext} from '../utils/context';
 import Animated, {FadeIn, FadeOutUp, Layout} from 'react-native-reanimated';
 import {getColorScheme} from '../utils/tools';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import firestore from '@react-native-firebase/firestore';
 
 const MainScreen = () => {
+  const ref = firestore().collection('todos');
+
+  const addTodo = async (todo: {
+    id: string;
+    title: string;
+    isFinished: boolean;
+  }) => {
+    await ref.add(todo);
+  };
+
   const {taskData} = useAppContext();
+  const initialData = [{id: 'initialData', title: 'Edit Video', isDone: true}];
+
   const colorScheme = getColorScheme().colorScheme;
   const Height =
     Dimensions.get('window').height - Dimensions.get('window').height * 0.3;
@@ -36,12 +49,11 @@ const MainScreen = () => {
           <GestureHandlerRootView
             style={{height: Height}}
             testID="scrollRootView">
-            {taskData.map(item => (
+            {taskData.map((item, index) => (
               <Animated.View
                 key={item.id.toString()}
                 entering={FadeIn.duration(500).delay(300)}
-                layout={Layout.duration(300)}
-                exiting={FadeOutUp.duration(300)}>
+                layout={Layout.duration(500 + index * 100)}>
                 <TaskCard task={item} />
               </Animated.View>
             ))}

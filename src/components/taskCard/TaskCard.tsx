@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {Dimensions, TouchableOpacity, UIManager} from 'react-native';
 import Animated, {
@@ -6,7 +6,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -14,7 +13,11 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 
 import CheckBox from './CheckBox';
 import TrashBin from './TrashBin';
-import {getColorScheme, getSelectedItem} from '../../utils/tools';
+import {
+  getColorScheme,
+  getSelectedItem,
+  sortTaskArray,
+} from '../../utils/tools';
 import {useAppContext, taskData} from '../../utils/context';
 
 const options = {
@@ -29,15 +32,12 @@ const THRESHOLD = -SCREEN_WIDTH * 0.1;
 
 const TaskCard = ({task}: {task: taskData}) => {
   let {userData, taskData, setTaskData} = useAppContext();
-
   const [isOver, setIsOver] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [finish, setFinish] = useState(false);
 
-  const progress = useSharedValue(0);
+  const opacity =
+    task.isDone === true ? useSharedValue(0.7) : useSharedValue(1);
+  const translateX = useSharedValue(1);
 
-  const opacity = useSharedValue(1);
-  const translateX = useSharedValue(0);
   const itemHeight = useSharedValue(LIST_ITEM_HIGHT);
   const marginY = useSharedValue(10);
 
@@ -59,40 +59,21 @@ const TaskCard = ({task}: {task: taskData}) => {
   const check = () => {
     if (!task.id) return;
 
-    setChecked(prev => {
-      return !prev;
-    });
-
     ReactNativeHapticFeedback.trigger('impactLight', options);
-
-    progress.value = withDelay(
-      500,
-      withTiming(checked ? 1 : 0, {duration: 500}, isFinished => {
-        if (isFinished) {
-          translateX.value = withSequence(
-            withTiming(checked ? 0 : -3),
-            withSpring(0),
-          );
-          opacity.value = withDelay(
-            500,
-            withTiming(checked ? 1 : 0.7, {duration: 500}),
-          );
-        }
-
-        const newData = taskData.map(item => {
-          if (item.id === task.id) {
-            return {id: item.id, title: item.title, isDone: !item.isDone};
-          }
-          return item;
-        });
-
-        const done = newData.filter(item => item.isDone === true);
-        const unDone = newData.filter(item => item.isDone === false);
-        const sortedArray = unDone.concat(done);
-
-        runOnJS(setTaskData)(sortedArray);
-      }),
+    opacity.value = withDelay(
+      1000,
+      withTiming(task.isDone === false ? 0.7 : 1),
     );
+
+    setTaskData(prev => {
+      const newData = prev.map(item => {
+        if (item.id === task.id) {
+          return {id: item.id, title: item.title, isDone: !item.isDone};
+        }
+        return item;
+      });
+      return sortTaskArray(newData);
+    });
   };
 
   const gesture = useMemo(
@@ -149,14 +130,13 @@ const TaskCard = ({task}: {task: taskData}) => {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-
               height: LIST_ITEM_HIGHT,
             },
             rTaskContainerStyle,
           ]}>
           <TouchableOpacity onPress={() => check()} testID="pressableCheckBox">
             <CheckBox
-              isChecked={checked}
+              isChecked={task.isDone}
               boxFillColor={getSelectedItem(userData.color)}
               strokeColor="#f2fcfe"
               width={LIST_ITEM_HIGHT - MARGIN}

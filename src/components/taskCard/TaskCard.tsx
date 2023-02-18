@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import {Dimensions, TouchableOpacity, UIManager} from 'react-native';
 import Animated, {
@@ -6,7 +6,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -16,6 +15,7 @@ import CheckBox from './CheckBox';
 import TrashBin from './TrashBin';
 import {getColorScheme, getSelectedItem} from '../../utils/tools';
 import {useAppContext, taskData} from '../../utils/context';
+import firestore from '@react-native-firebase/firestore';
 
 const options = {
   enableVibrateFallback: true,
@@ -28,16 +28,13 @@ const MARGIN = 10;
 const THRESHOLD = -SCREEN_WIDTH * 0.1;
 
 const TaskCard = ({task}: {task: taskData}) => {
-  let {userData, taskData, setTaskData} = useAppContext();
-
+  let {userData} = useAppContext();
   const [isOver, setIsOver] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [finish, setFinish] = useState(false);
 
-  const progress = useSharedValue(0);
+  const opacity =
+    task.isDone === true ? useSharedValue(0.7) : useSharedValue(1);
+  const translateX = useSharedValue(1);
 
-  const opacity = useSharedValue(1);
-  const translateX = useSharedValue(0);
   const itemHeight = useSharedValue(LIST_ITEM_HIGHT);
   const marginY = useSharedValue(10);
 
@@ -56,43 +53,19 @@ const TaskCard = ({task}: {task: taskData}) => {
     };
   });
 
-  const check = () => {
+  const check = async () => {
     if (!task.id) return;
 
-    setChecked(prev => {
-      return !prev;
-    });
-
     ReactNativeHapticFeedback.trigger('impactLight', options);
+    opacity.value = withDelay(500, withTiming(task.isDone === false ? 0.7 : 1));
 
-    progress.value = withDelay(
-      500,
-      withTiming(checked ? 1 : 0, {duration: 500}, isFinished => {
-        if (isFinished) {
-          translateX.value = withSequence(
-            withTiming(checked ? 0 : -3),
-            withSpring(0),
-          );
-          opacity.value = withDelay(
-            500,
-            withTiming(checked ? 1 : 0.7, {duration: 500}),
-          );
-        }
+    await firestore().collection('todos').doc(task.id.toString()).update({
+      isDone: !task.isDone,
+    });
+  };
 
-        const newData = taskData.map(item => {
-          if (item.id === task.id) {
-            return {id: item.id, title: item.title, isDone: !item.isDone};
-          }
-          return item;
-        });
-
-        const done = newData.filter(item => item.isDone === true);
-        const unDone = newData.filter(item => item.isDone === false);
-        const sortedArray = unDone.concat(done);
-
-        runOnJS(setTaskData)(sortedArray);
-      }),
-    );
+  const deleteItem = async (id: string) => {
+    await firestore().collection('todos').doc(id).delete();
   };
 
   const gesture = useMemo(
@@ -126,8 +99,7 @@ const TaskCard = ({task}: {task: taskData}) => {
               750,
               withTiming(0, undefined, isFinished => {
                 if (isFinished) {
-                  const newData = taskData.filter(item => item.id !== task.id);
-                  runOnJS(setTaskData)(newData);
+                  runOnJS(deleteItem)(task.id.toString());
                 }
               }),
             );
@@ -136,7 +108,7 @@ const TaskCard = ({task}: {task: taskData}) => {
             runOnJS(setIsOver)(false);
           }
         }),
-    [taskData, setTaskData],
+    [],
   );
 
   return (
@@ -149,14 +121,13 @@ const TaskCard = ({task}: {task: taskData}) => {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-
               height: LIST_ITEM_HIGHT,
             },
             rTaskContainerStyle,
           ]}>
           <TouchableOpacity onPress={() => check()} testID="pressableCheckBox">
             <CheckBox
-              isChecked={checked}
+              isChecked={task.isDone}
               boxFillColor={getSelectedItem(userData.color)}
               strokeColor="#f2fcfe"
               width={LIST_ITEM_HIGHT - MARGIN}

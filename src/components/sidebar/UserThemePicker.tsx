@@ -1,6 +1,6 @@
 import React from 'react';
 import {useAppContext, userData} from '../../utils/context';
-import {Dimensions, ScrollView} from 'react-native';
+import {Dimensions, ScrollView, Text} from 'react-native';
 import Colors from './Colors';
 import Icons from './Icons';
 const WIDTH = Dimensions.get('window').width;
@@ -50,20 +50,23 @@ const UserThemePicker = () => {
   };
 
   return (
-    <ScrollView>
-      <Colors
-        itemArray={userData.color}
-        dimension={WIDTH_HEIGHT}
-        gap={GAP}
-        setSelectedItem={setSelectedItem}
-      />
-      <Icons
-        itemArray={userData.icon}
-        dimension={WIDTH_HEIGHT}
-        gap={GAP}
-        setSelectedItem={setSelectedItem}
-      />
-    </ScrollView>
+    <>
+      <Text style={{fontSize: 12}}>Pick Your Color and Icon</Text>
+      <ScrollView>
+        <Colors
+          itemArray={userData.color}
+          dimension={WIDTH_HEIGHT}
+          gap={GAP}
+          setSelectedItem={setSelectedItem}
+        />
+        <Icons
+          itemArray={userData.icon}
+          dimension={WIDTH_HEIGHT}
+          gap={GAP}
+          setSelectedItem={setSelectedItem}
+        />
+      </ScrollView>
+    </>
   );
 };
 

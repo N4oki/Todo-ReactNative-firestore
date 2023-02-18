@@ -25,22 +25,6 @@ let sharedState = {
   setUserData: jest.fn(),
 };
 
-jest.mock('react-native-reanimated', () => {
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    ...jest.requireActual('react-native-reanimated/src/reanimated2/mock'),
-    Layout: {
-      duration: () => ({
-        damping: () => ({
-          springify: () => ({
-            delay: () => {},
-          }),
-        }),
-      }),
-    },
-  };
-});
-
 describe('Task card components', () => {
   it('should render title of task data and change text value when user changes it', async () => {
     const {getByPlaceholderText} = render(

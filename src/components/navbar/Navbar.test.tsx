@@ -3,22 +3,6 @@ import Navbar from './Navbar';
 import {AppWrapper} from '../../utils/context';
 import {render, screen} from '@testing-library/react-native';
 
-jest.mock('react-native-reanimated', () => {
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    ...jest.requireActual('react-native-reanimated/src/reanimated2/mock'),
-    Layout: {
-      duration: () => ({
-        damping: () => ({
-          springify: () => ({
-            delay: () => {},
-          }),
-        }),
-      }),
-    },
-  };
-});
-
 describe('Task card components', () => {
   it('renders Navbar ', async () => {
     let taskData = [

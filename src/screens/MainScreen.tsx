@@ -5,21 +5,23 @@ import {
   KeyboardAvoidingView,
   View,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 
 import Navbar from '../components/navbar/Navbar';
 import TaskCard from '../components/taskCard/TaskCard';
 import TaskInput from '../components/taskInput/TaskInput';
 import {useAppContext} from '../utils/context';
-import Animated, {FadeIn, FadeOutUp, Layout} from 'react-native-reanimated';
+import Animated, {FadeIn, Layout} from 'react-native-reanimated';
 import {getColorScheme} from '../utils/tools';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const MainScreen = () => {
   const {taskData} = useAppContext();
   const colorScheme = getColorScheme().colorScheme;
-  const Height =
-    Dimensions.get('window').height - Dimensions.get('window').height * 0.3;
+
+  const windowHeight = Dimensions.get('window').height;
+  const scrollViewHeight = windowHeight * 0.7 - (StatusBar.currentHeight || 0);
 
   return (
     <View
@@ -29,25 +31,23 @@ const MainScreen = () => {
       }}>
       <Navbar />
 
-      <KeyboardAvoidingView
-        style={{flex: 1, width: '100%'}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView>
-          <GestureHandlerRootView
-            style={{height: Height}}
-            testID="scrollRootView">
-            {taskData.map(item => (
-              <Animated.View
-                key={item.id.toString()}
-                entering={FadeIn.duration(500).delay(300)}
-                layout={Layout.duration(300)}
-                exiting={FadeOutUp.duration(300)}>
-                <TaskCard task={item} />
-              </Animated.View>
-            ))}
-          </GestureHandlerRootView>
-        </ScrollView>
+      <ScrollView>
+        <GestureHandlerRootView
+          style={{height: scrollViewHeight}}
+          testID="scrollRootView">
+          {taskData.map(item => (
+            <Animated.View
+              key={item.id.toString()}
+              entering={FadeIn.duration(300)}
+              layout={Layout.duration(300)}>
+              <TaskCard task={item} />
+            </Animated.View>
+          ))}
+        </GestureHandlerRootView>
+      </ScrollView>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TaskInput />
       </KeyboardAvoidingView>
     </View>

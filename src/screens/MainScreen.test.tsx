@@ -10,9 +10,27 @@ jest.mock('react-native-haptic-feedback', () => ({
 describe('Main　screen', () => {
   it('renders title of task and shows new title when value changes ', async () => {
     let taskData = [
-      {id: '1', title: 'test1', isDone: false},
-      {id: '2', title: 'test2', isDone: false},
-      {id: '3', title: 'test3', isDone: false},
+      {
+        id: '1',
+        title: 'test1',
+        isDone: false,
+        isEditMode: false,
+        date: '2020' as unknown as Date,
+      },
+      {
+        id: '2',
+        title: 'test2',
+        isDone: false,
+        isEditMode: false,
+        date: '2021' as unknown as Date,
+      },
+      {
+        id: '3',
+        title: 'test3',
+        isDone: false,
+        isEditMode: false,
+        date: '2022' as unknown as Date,
+      },
     ];
     const userData = {
       color: [

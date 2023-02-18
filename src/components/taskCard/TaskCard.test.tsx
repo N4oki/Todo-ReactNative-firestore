@@ -7,25 +7,17 @@ jest.mock('react-native-haptic-feedback', () => ({
   trigger: jest.fn(),
 }));
 
-jest.mock('react-native-reanimated', () => {
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    ...jest.requireActual('react-native-reanimated/src/reanimated2/mock'),
-    Layout: {
-      duration: () => ({
-        damping: () => ({
-          springify: () => ({
-            delay: () => {},
-          }),
-        }),
-      }),
-    },
-  };
-});
-
 describe('Task card components', () => {
   it('should render title of task data and change text value when user changes it', async () => {
-    let taskData = [{id: '1', title: 'test', isDone: false}];
+    let taskData = [
+      {
+        id: '1',
+        title: 'test',
+        isDone: false,
+        isEditMode: false,
+        date: '2002' as unknown as Date,
+      },
+    ];
     const userData = {
       color: [
         {item: '#434343', isChecked: true},

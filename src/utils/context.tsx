@@ -15,6 +15,8 @@ export type taskData = {
   id: string | number[];
   title: string;
   isDone: boolean;
+  date: Date;
+  isEditMode: boolean;
 };
 
 export type userData = {
@@ -44,8 +46,16 @@ export const AppWrapper = ({
   useEffect(() => {
     return ref.onSnapshot(querySnapshot => {
       const taskData = querySnapshot.docs.map(item => {
-        const {title, isDone, date} = item.data();
-        return {id: item.id, title, isDone, date};
+        const {title, isDone, date, isEditMode} = item.data();
+
+        const data: taskData = {
+          id: item.id,
+          title,
+          isDone,
+          date,
+          isEditMode,
+        };
+        return data;
       });
 
       setTaskData(sortTaskArray(taskData));

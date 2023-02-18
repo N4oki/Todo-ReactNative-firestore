@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {Dimensions, TouchableOpacity, UIManager} from 'react-native';
+import {Dimensions, TouchableOpacity, Keyboard} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -13,6 +13,7 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 
 import CheckBox from './CheckBox';
 import TrashBin from './TrashBin';
+import EditButton from './EditButton';
 import {getColorScheme, getSelectedItem} from '../../utils/tools';
 import {useAppContext, taskData} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
@@ -86,17 +87,11 @@ const TaskCard = ({task}: {task: taskData}) => {
         .onEnd(() => {
           const shouldBeDismissed = translateX.value < THRESHOLD;
           if (shouldBeDismissed && task.id) {
-            translateX.value = withTiming(
-              -SCREEN_WIDTH / 2,
-              {duration: 500},
-              () => {
-                runOnJS(setIsOver)(false);
-              },
-            );
-            itemHeight.value = withDelay(750, withTiming(0));
-            opacity.value = withDelay(750, withTiming(0));
+            translateX.value = withTiming(-SCREEN_WIDTH / 2, {duration: 500});
+            itemHeight.value = withDelay(500, withTiming(0));
+            opacity.value = withDelay(500, withTiming(0));
             marginY.value = withDelay(
-              750,
+              500,
               withTiming(0, undefined, isFinished => {
                 if (isFinished) {
                   runOnJS(deleteItem)(task.id.toString());
@@ -140,20 +135,20 @@ const TaskCard = ({task}: {task: taskData}) => {
             style={[
               {
                 fontSize: 25,
-                height: LIST_ITEM_HIGHT - MARGIN,
-                lineHeight: LIST_ITEM_HIGHT - MARGIN,
                 width: SCREEN_WIDTH * 0.8,
                 padding: 0,
-                marginLeft: 2,
+                marginHorizontal: 5,
                 color: textColor,
               },
               AnimatedOpacity,
-            ]}>
-            {task.title}
+            ]}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {task.isEditMode ? 'Editing...' : task.title}
           </Animated.Text>
         </Animated.View>
       </GestureDetector>
-      {isOver ? <TrashBin /> : null}
+      {isOver ? <TrashBin /> : <EditButton task={task} />}
     </>
   );
 };

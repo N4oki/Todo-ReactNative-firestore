@@ -1,48 +1,13 @@
 import React from 'react';
 import MainScreen from './MainScreen';
 import {AppWrapper} from '../utils/context';
-import {render, screen} from '@testing-library/react-native';
+import {render} from '@testing-library/react-native';
 
 jest.mock('react-native-haptic-feedback', () => ({
   trigger: jest.fn(),
 }));
 
-jest.mock('react-native-reanimated', () => {
-  return {
-    ...jest.requireActual('react-native-reanimated/mock'),
-    ...jest.requireActual('react-native-reanimated/src/reanimated2/mock'),
-    Layout: {
-      duration: () => ({
-        damping: () => ({
-          springify: () => ({
-            delay: () => {},
-          }),
-        }),
-      }),
-    },
-    FadeIn: {
-      duration: () => ({
-        delay: () => {},
-      }),
-    },
-    FadeOutUp: {
-      duration: () => ({
-        delay: () => {},
-      }),
-    },
-  };
-});
-
-describe('Task card components', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-  });
-
+describe('Main　screen', () => {
   it('renders title of task and shows new title when value changes ', async () => {
     let taskData = [
       {id: '1', title: 'test1', isDone: false},

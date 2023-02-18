@@ -4,17 +4,42 @@ import '@testing-library/jest-native';
 
 import 'react-native-gesture-handler/jestSetup.js';
 
-import {NativeModules as RNNativeModules} from 'react-native';
-RNNativeModules.UIManager = RNNativeModules.UIManager || {};
-RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
-RNNativeModules.RNGestureHandlerModule =
-  RNNativeModules.RNGestureHandlerModule || {
-    State: {BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END'},
-    attachGestureHandler: jest.fn(),
-    createGestureHandler: jest.fn(),
-    dropGestureHandler: jest.fn(),
-    updateGestureHandler: jest.fn(),
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
+jest.mock('@react-native-firebase/app', () => ({}));
+
+jest.mock('@react-native-firebase/firestore', () => () => {
+  return {
+    collection: jest.fn(() => ({
+      orderBy: jest.fn(() => ({
+        onSnapshot: jest.fn(),
+      })),
+    })),
   };
-RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
-  forceTouchAvailable: false,
-};
+});
+
+jest.mock('react-native-reanimated', () => {
+  return {
+    ...jest.requireActual('react-native-reanimated/mock'),
+    ...jest.requireActual('react-native-reanimated/src/reanimated2/mock'),
+    Layout: {
+      duration: () => ({
+        damping: () => ({
+          springify: () => ({
+            delay: () => {},
+          }),
+        }),
+      }),
+    },
+    FadeIn: {
+      duration: () => ({
+        delay: () => {},
+      }),
+    },
+    FadeOutUp: {
+      duration: () => ({
+        delay: () => {},
+      }),
+    },
+  };
+});

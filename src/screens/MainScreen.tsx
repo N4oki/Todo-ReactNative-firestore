@@ -20,10 +20,8 @@ const MainScreen = () => {
   const {taskData} = useAppContext();
   const colorScheme = getColorScheme().colorScheme;
 
-  const screenHeight = Dimensions.get('screen').height;
   const windowHeight = Dimensions.get('window').height;
-  const scrollViewHeight =
-    screenHeight - windowHeight + (StatusBar.currentHeight || 0);
+  const scrollViewHeight = windowHeight * 0.7 - (StatusBar.currentHeight || 0);
 
   return (
     <View

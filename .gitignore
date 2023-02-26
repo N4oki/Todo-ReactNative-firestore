@@ -63,3 +63,7 @@ yarn-error.log
 .metro-health-check*
 
 coverage/
+
+# firestore
+android/app/google-services.json
+ios/GoogleService-Info.plist

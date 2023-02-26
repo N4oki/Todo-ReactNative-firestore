@@ -65,5 +65,5 @@ yarn-error.log
 coverage/
 
 # firestore
-/android/app/google-services.json
-/ios/GoogleService-Info.plist
+android/app/google-services.json
+ios/GoogleService-Info.plist

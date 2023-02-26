@@ -2,6 +2,10 @@
 
 This is a simple todo app built with React Native and Firebase Firestore. The app allows users to create, edit, and delete todos, and automatically syncs changes across all devices in real time.
 
+## Screenshot
+
+![screenshot image](https://res.cloudinary.com/deevlog/image/upload/c_scale,q_70,w_250/v1677411994/Simulator_Screen_Shot_-_iPhone_14_-_2023-02-26_at_15.54.51_pmih3f.png)
+
 ## Getting Started
 
 Prerequisites

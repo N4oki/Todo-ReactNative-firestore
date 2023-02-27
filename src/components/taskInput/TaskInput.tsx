@@ -33,26 +33,21 @@ const TaskInput = () => {
   const valid = letters.test(taskValue) ? true : false;
 
   const onPress = async (taskValue: string) => {
-    if (editMode) {
-      await ref
-        .doc(editMode.id.toString())
-        .update({title: taskValue, editMode: false});
-      setTaskValue('');
-      Keyboard.dismiss();
-      return;
-    }
-
     if (!taskValue) return;
+
     const newData = {
       title: taskValue,
       id: uuid.v4(),
       isDone: false,
       date: new Date(),
-      isEditMode: false,
+      isEditMode: editMode ? false : true,
     };
 
-    await ref.add(newData);
+    const docRef = editMode ? ref.doc(editMode.id.toString()) : ref.doc();
+    await docRef.set(newData);
+
     setTaskValue('');
+    Keyboard.dismiss();
   };
 
   const onAddButtonClick = () => {

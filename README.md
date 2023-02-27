@@ -33,9 +33,7 @@ Install dependencies:
 
 ``` bash
 npm install
-```
-or
-```
+# or
 yarn install
 ```
 
@@ -48,9 +46,7 @@ Start the Metro bundler:
 
 ``` bash
 npm start
-```
-or
-```bash
+# or
 yarn start
 ```
 
@@ -58,9 +54,7 @@ Run the app on Android or iOS:
 
 ``` bash
 npm run android
-```
-or
-``` bash
+# or
 npm run ios
 ```
 

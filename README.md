@@ -4,7 +4,7 @@ This is a simple todo app built with React Native and Firebase Firestore. The ap
 
 ## Screenshot
 
-![screenshot image_ios](https://res.cloudinary.com/deevlog/image/upload/c_scale,w_275/v1677412889/Screenshot_2023-02-26_at_9.51.50_pm_lsgqoz.png)
+![screenshot image_ios](https://res.cloudinary.com/deevlog/image/upload/c_scale,h_400/v1677465597/Screenshot_2023-02-26_at_9.51.50_pm_jee6pv.png)
 
 ## Getting Started
 

@@ -25,8 +25,7 @@ const TaskInput = () => {
   const [taskValue, setTaskValue] = useState('');
   const [focus, setFocus] = useState(false);
   const inputRef = useRef<TextInput>(null);
-  let editMode = taskData.find(item => item.isEditMode);
-
+  let editModeTask = taskData.find(item => item.isEditMode);
   const {keyboardBg, inputBg, textColor} = getColorScheme().colors;
 
   const letters = new RegExp(/[^ ]/);
@@ -34,16 +33,18 @@ const TaskInput = () => {
 
   const onPress = async (taskValue: string) => {
     if (!taskValue) return;
-
+    console.log('log');
     const newData = {
       title: taskValue,
       id: uuid.v4(),
       isDone: false,
       date: new Date(),
-      isEditMode: editMode ? false : true,
+      isEditMode: editModeTask ? false : true,
     };
 
-    const docRef = editMode ? ref.doc(editMode.id.toString()) : ref.doc();
+    const docRef = editModeTask
+      ? ref.doc(editModeTask.id.toString())
+      : ref.doc();
     await docRef.set(newData);
 
     setTaskValue('');
@@ -55,18 +56,18 @@ const TaskInput = () => {
   };
 
   useEffect(() => {
-    if (editMode) {
+    if (editModeTask) {
       inputRef?.current?.focus();
     }
-  }, [editMode]);
+  }, [editModeTask]);
 
-  const onBlur = async (editMode: taskData | undefined) => {
+  const onBlur = async (task: taskData | undefined) => {
     setFocus(false);
 
-    if (!editMode) return;
+    if (!task) return;
 
-    await firestore().collection('todos').doc(editMode.id.toString()).update({
-      isEditMode: !editMode.isEditMode,
+    await firestore().collection('todos').doc(task.id.toString()).update({
+      isEditMode: !task.isEditMode,
     });
   };
 
@@ -101,7 +102,7 @@ const TaskInput = () => {
             )}
             <AnimatedTextInput
               layout={Layout.duration(100).damping(15).springify().delay(100)}
-              placeholder={editMode ? 'Edit your task' : 'Add your task'}
+              placeholder={editModeTask ? 'Edit your task' : 'Add your task'}
               placeholderTextColor={textColor}
               onChangeText={text => setTaskValue(text)}
               value={taskValue}
@@ -116,7 +117,7 @@ const TaskInput = () => {
               }}
               onSubmitEditing={() => onPress(taskValue)}
               onFocus={() => setFocus(true)}
-              onBlur={() => onBlur(editMode)}
+              onBlur={() => onBlur(editModeTask)}
             />
             {focus && valid && (
               <SendButton

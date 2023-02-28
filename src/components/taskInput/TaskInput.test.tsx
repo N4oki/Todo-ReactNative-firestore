@@ -4,7 +4,15 @@ import {AppWrapper} from '../../utils/context';
 import {fireEvent, render} from '@testing-library/react-native';
 import TaskInput from './TaskInput';
 
-let taskData = [{id: '1', title: 'test', isDone: false}];
+let taskData = [
+  {
+    id: '1',
+    title: 'test',
+    isDone: false,
+    isEditMode: false,
+    date: '2022' as unknown as Date,
+  },
+];
 const userData = {
   color: [
     {item: '#434343', isChecked: true},

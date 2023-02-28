@@ -1,10 +1,11 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 
 import {
   KeyboardAvoidingView,
   SafeAreaView,
   TextInput,
   View,
+  Keyboard,
 } from 'react-native';
 import uuid from 'react-native-uuid';
 
@@ -13,15 +14,18 @@ import {getColorScheme} from '../../utils/tools';
 import AddButton from './AddButton';
 import SendButton from './SendButton';
 import firestore from '@react-native-firebase/firestore';
+import {taskData, useAppContext} from '../../utils/context';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const TaskInput = () => {
   const ref = firestore().collection('todos');
+
+  const {taskData} = useAppContext();
   const [taskValue, setTaskValue] = useState('');
   const [focus, setFocus] = useState(false);
   const inputRef = useRef<TextInput>(null);
-
+  let editModeTask = taskData.find(item => item.isEditMode);
   const {keyboardBg, inputBg, textColor} = getColorScheme().colors;
 
   const letters = new RegExp(/[^ ]/);
@@ -29,19 +33,42 @@ const TaskInput = () => {
 
   const onPress = async (taskValue: string) => {
     if (!taskValue) return;
+    console.log('log');
     const newData = {
       title: taskValue,
       id: uuid.v4(),
       isDone: false,
       date: new Date(),
+      isEditMode: editModeTask ? false : true,
     };
 
-    await ref.add(newData);
+    const docRef = editModeTask
+      ? ref.doc(editModeTask.id.toString())
+      : ref.doc();
+    await docRef.set(newData);
+
     setTaskValue('');
+    Keyboard.dismiss();
   };
 
   const onAddButtonClick = () => {
     inputRef?.current?.focus();
+  };
+
+  useEffect(() => {
+    if (editModeTask) {
+      inputRef?.current?.focus();
+    }
+  }, [editModeTask]);
+
+  const onBlur = async (task: taskData | undefined) => {
+    setFocus(false);
+
+    if (!task) return;
+
+    await firestore().collection('todos').doc(task.id.toString()).update({
+      isEditMode: !task.isEditMode,
+    });
   };
 
   return (
@@ -75,7 +102,7 @@ const TaskInput = () => {
             )}
             <AnimatedTextInput
               layout={Layout.duration(100).damping(15).springify().delay(100)}
-              placeholder="Add your task"
+              placeholder={editModeTask ? 'Edit your task' : 'Add your task'}
               placeholderTextColor={textColor}
               onChangeText={text => setTaskValue(text)}
               value={taskValue}
@@ -90,7 +117,7 @@ const TaskInput = () => {
               }}
               onSubmitEditing={() => onPress(taskValue)}
               onFocus={() => setFocus(true)}
-              onBlur={() => setFocus(false)}
+              onBlur={() => onBlur(editModeTask)}
             />
             {focus && valid && (
               <SendButton

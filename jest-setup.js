@@ -36,10 +36,17 @@ jest.mock('react-native-reanimated', () => {
         delay: () => {},
       }),
     },
+
+    FadeOutRight: {
+      duration: () => {},
+    },
     FadeOutUp: {
       duration: () => ({
         delay: () => {},
       }),
+    },
+    FadeInRight: {
+      duration: () => {},
     },
   };
 });

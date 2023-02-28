@@ -3,7 +3,7 @@ import AnimatedProgressText from './AnimatedProgressText';
 import {getColorScheme} from '../../utils/tools';
 import {View, Text} from 'react-native';
 
-const NavBar = () => {
+const Navbar = () => {
   const {navbarBg, textColor} = getColorScheme().colors;
 
   return (
@@ -38,4 +38,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default Navbar;

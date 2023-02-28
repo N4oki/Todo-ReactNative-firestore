@@ -26,16 +26,22 @@ describe('utils functions ', () => {
       id: 'id1',
       title: 'should be 3rd',
       isDone: true,
+      isEditMode: false,
+      date: '2020' as unknown as Date,
     },
     {
       id: 'id2',
       title: 'should be 1st',
       isDone: false,
+      isEditMode: false,
+      date: '2021' as unknown as Date,
     },
     {
       id: 'id3',
       title: 'should be 2nd',
       isDone: false,
+      isEditMode: false,
+      date: '2022' as unknown as Date,
     },
   ];
   it('should get selected item from array', () => {

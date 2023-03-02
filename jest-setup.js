@@ -6,9 +6,15 @@ import 'react-native-gesture-handler/jestSetup.js';
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
-jest.mock('@react-native-firebase/app', () => ({}));
+jest.mock('@react-native-firebase/app');
 
-jest.mock('@react-native-firebase/firestore', () => () => {
+jest.mock('@react-native-firebase/auth', () => {
+  return () => ({
+    currentUser: null,
+    onAuthStateChanged: (callback: Function) => callback(),
+  });
+});
+jest.mock('@react-native-firebase/firestore', () => {
   return {
     collection: jest.fn(() => ({
       orderBy: jest.fn(() => ({

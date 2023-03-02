@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import {Dimensions, TouchableOpacity, Keyboard} from 'react-native';
+import {Dimensions, TouchableOpacity} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -15,8 +15,8 @@ import CheckBox from './CheckBox';
 import TrashBin from './TrashBin';
 import EditButton from './EditButton';
 import {getColorScheme, getSelectedItem} from '../../utils/tools';
-import {useAppContext, taskData} from '../../utils/context';
-import firestore from '@react-native-firebase/firestore';
+import {useAppContext, TaskData} from '../../utils/context';
+import {updater} from '../../utils/firestoreUpdater';
 
 const options = {
   enableVibrateFallback: true,
@@ -28,7 +28,7 @@ const LIST_ITEM_HIGHT = 40;
 const MARGIN = 10;
 const THRESHOLD = -SCREEN_WIDTH * 0.1;
 
-const TaskCard = ({task}: {task: taskData}) => {
+const TaskCard = ({task}: {task: TaskData}) => {
   let {userData} = useAppContext();
   const [isOver, setIsOver] = useState(false);
 
@@ -60,13 +60,7 @@ const TaskCard = ({task}: {task: taskData}) => {
     ReactNativeHapticFeedback.trigger('impactLight', options);
     opacity.value = withDelay(500, withTiming(task.isDone === false ? 0.7 : 1));
 
-    await firestore().collection('todos').doc(task.id.toString()).update({
-      isDone: !task.isDone,
-    });
-  };
-
-  const deleteItem = async (id: string) => {
-    await firestore().collection('todos').doc(id).delete();
+    updater({id: task.id, key: 'toggleIsDone', isDone: task.isDone});
   };
 
   const gesture = useMemo(
@@ -94,7 +88,7 @@ const TaskCard = ({task}: {task: taskData}) => {
               500,
               withTiming(0, undefined, isFinished => {
                 if (isFinished) {
-                  runOnJS(deleteItem)(task.id.toString());
+                  runOnJS(updater)({key: 'delete', id: task.id});
                 }
               }),
             );

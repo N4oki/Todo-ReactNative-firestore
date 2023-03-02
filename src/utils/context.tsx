@@ -7,62 +7,113 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import {Text, View} from 'react-native';
 import {INITIAL_DATA} from '../data/constants';
 import firestore from '@react-native-firebase/firestore';
 import {sortTaskArray} from './tools';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
-export type taskData = {
-  id: string | number[];
+export interface TaskData {
+  id: string;
   title: string;
   isDone: boolean;
-  date: Date;
+  date: number;
   isEditMode: boolean;
-};
+}
 
-export type userData = {
+export type UserData = {
   color: {item: string; isChecked: boolean}[];
   icon: {item: string; isChecked: boolean}[];
 };
-export interface appContextValue {
-  taskData: taskData[];
-  userData: userData;
-  setUserData: Dispatch<SetStateAction<userData>>;
+
+interface AppContextValue {
+  taskData: TaskData[];
+  userData: UserData;
+  setUserData: Dispatch<SetStateAction<UserData>>;
 }
 
-const AppContext = createContext<appContextValue | undefined>(undefined);
+const AppContext = createContext<AppContextValue | undefined>(undefined);
 
 export const AppWrapper = ({
   children,
   testValue,
 }: {
   children: ReactNode;
-  testValue?: appContextValue;
+  testValue?: AppContextValue;
 }) => {
-  const [userData, setUserData] = useState(INITIAL_DATA);
-  const [taskData, setTaskData] = useState<taskData[]>([]);
-
-  const ref = firestore().collection('todos').orderBy('date', 'desc');
+  const [userData, setUserData] = useState<UserData>(INITIAL_DATA);
+  const [taskData, setTaskData] = useState<TaskData[]>([]);
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    return ref.onSnapshot(querySnapshot => {
-      const taskData = querySnapshot.docs.map(item => {
-        const {title, isDone, date, isEditMode} = item.data();
+    auth()
+      .signInAnonymously()
+      .then(() => {
+        console.log('User signed in anonymously');
+      })
+      .catch(error => {
+        if (error.code === 'auth/operation-not-allowed') {
+          console.log('Enable anonymous in your firebase console.');
+        }
 
-        const data: taskData = {
-          id: item.id,
-          title,
-          isDone,
-          date,
-          isEditMode,
-        };
-        return data;
+        console.error(error);
       });
 
-      setTaskData(sortTaskArray(taskData));
-    });
+    const unsubscribe = auth().onAuthStateChanged(
+      (user: FirebaseAuthTypes.User | null) => {
+        if (!user) {
+          setInitializing(false);
+          return;
+        }
+
+        const ref = firestore()
+          .collection('users')
+          .doc(user.uid)
+          .collection('todos')
+          .orderBy('date', 'desc');
+
+        const unsubscribe = ref.onSnapshot(querySnapshot => {
+          const taskData = querySnapshot.docs.map(doc => {
+            const {title, isDone, date, isEditMode} = doc.data();
+
+            const data: TaskData = {
+              id: doc.id,
+              title,
+              isDone,
+              date,
+              isEditMode,
+            };
+
+            return data;
+          });
+
+          setTaskData(sortTaskArray(taskData));
+          setInitializing(false);
+        });
+
+        return () => {
+          unsubscribe();
+        };
+      },
+    );
+    return unsubscribe;
   }, []);
 
-  let sharedState = {
+  if (initializing) {
+    return (
+      <View
+        style={{
+          display: 'flex',
+          minHeight: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{color: 'white'}}>Loading...</Text>
+      </View>
+    );
+  }
+
+  const sharedState = {
     taskData,
     userData,
     setUserData,
@@ -76,12 +127,13 @@ export const AppWrapper = ({
 };
 
 export const useAppContext = () => {
-  let context = useContext(AppContext);
+  const context = useContext(AppContext);
+
   if (!context) {
     throw new Error(
-      'useAppContext must be used inside of a AppWrapper, ' +
-        'otherwise it will not function correctly.',
+      'useAppContext must be used inside of a AppWrapper, otherwise it will not function correctly.',
     );
   }
+
   return context;
 };

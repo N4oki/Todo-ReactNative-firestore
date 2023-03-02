@@ -10,7 +10,7 @@ let taskData = [
     title: 'test',
     isDone: false,
     isEditMode: false,
-    date: '2022' as unknown as Date,
+    date: Date.now(),
   },
 ];
 const userData = {
@@ -33,7 +33,7 @@ let sharedState = {
   setUserData: jest.fn(),
 };
 
-describe('Task card components', () => {
+describe('Task input components', () => {
   it('should render title of task data and change text value when user changes it', async () => {
     const {getByPlaceholderText} = render(
       <AppWrapper testValue={sharedState}>
@@ -43,7 +43,6 @@ describe('Task card components', () => {
 
     const textInput = getByPlaceholderText(/Add your task/i);
     fireEvent.changeText(textInput, 'do dishes');
-
     expect(textInput.props.value).toBe('do dishes');
   });
 });

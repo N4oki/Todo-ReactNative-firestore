@@ -1,13 +1,13 @@
 import React from 'react';
 import Navbar from './Navbar';
 import {AppWrapper} from '../../utils/context';
-import {render, screen} from '@testing-library/react-native';
+import {act, render, screen, waitFor} from '@testing-library/react-native';
 
-describe('Task card components', () => {
+describe('Navbar components', () => {
   it('renders Navbar ', async () => {
     let taskData = [
-      {id: '1', title: 'test', isDone: false},
-      {id: '2', title: 'test', isDone: true},
+      {id: '1', title: 'test', isDone: false, date: 2020, isEditMode: false},
+      {id: '2', title: 'test', isDone: true, date: 2021, isEditMode: false},
     ];
     const userData = {
       color: [

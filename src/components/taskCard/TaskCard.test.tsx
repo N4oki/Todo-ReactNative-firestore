@@ -1,7 +1,7 @@
 import React from 'react';
 import TaskCard from './TaskCard';
 import {AppWrapper} from '../../utils/context';
-import {render} from '@testing-library/react-native';
+import {render, waitFor} from '@testing-library/react-native';
 
 jest.mock('react-native-haptic-feedback', () => ({
   trigger: jest.fn(),
@@ -15,7 +15,7 @@ describe('Task card components', () => {
         title: 'test',
         isDone: false,
         isEditMode: false,
-        date: '2002' as unknown as Date,
+        date: 2020,
       },
     ];
     const userData = {
@@ -43,7 +43,6 @@ describe('Task card components', () => {
         <TaskCard task={taskData[0]} />
       </AppWrapper>,
     );
-
     const taskTitleText = getByText(/test/i);
     expect(taskTitleText.props.children).toBe('test');
   });

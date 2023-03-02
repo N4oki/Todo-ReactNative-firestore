@@ -1,4 +1,4 @@
-import {taskData} from './context';
+import {TaskData} from './context';
 import {useColorScheme} from 'react-native';
 
 export const getSelectedItem = (
@@ -15,7 +15,7 @@ export const getSelectedItem = (
   return selectedItem[0].item;
 };
 
-export const sortTaskArray = (array: taskData[]) => {
+export const sortTaskArray = (array: TaskData[]) => {
   const done = array.filter(item => item.isDone === true);
   const unDone = array.filter(item => item.isDone === false);
 
@@ -23,7 +23,7 @@ export const sortTaskArray = (array: taskData[]) => {
   return sortedArray;
 };
 
-export const getPercentage = (array: taskData[]): number => {
+export const getPercentage = (array: TaskData[]): number => {
   const checkedTasks = array.filter(task => {
     if (task.isDone) return true;
     return false;
@@ -47,4 +47,25 @@ export const getColorScheme = () => {
     colorScheme: colorScheme,
     colors: {keyboardBg, inputBg, textColor, navbarBg},
   };
+};
+
+export const generateUUID = () => {
+  const S4 = () => {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+
+  return (
+    S4() +
+    S4() +
+    '-' +
+    S4() +
+    '-' +
+    S4() +
+    '-' +
+    S4() +
+    '-' +
+    S4() +
+    S4() +
+    S4()
+  );
 };

@@ -10,7 +10,7 @@ import {
   getPercentage,
   getColorScheme,
 } from './tools';
-import {taskData} from './context';
+import {TaskData} from './context';
 
 const mockedUseColorScheme = jest.fn().mockReturnValue('dark');
 
@@ -27,21 +27,21 @@ describe('utils functions ', () => {
       title: 'should be 3rd',
       isDone: true,
       isEditMode: false,
-      date: '2020' as unknown as Date,
+      date: 2020,
     },
     {
       id: 'id2',
       title: 'should be 1st',
       isDone: false,
       isEditMode: false,
-      date: '2021' as unknown as Date,
+      date: 2021,
     },
     {
       id: 'id3',
       title: 'should be 2nd',
       isDone: false,
       isEditMode: false,
-      date: '2022' as unknown as Date,
+      date: 2022,
     },
   ];
   it('should get selected item from array', () => {
@@ -83,7 +83,7 @@ describe('utils functions ', () => {
     const percentage = getPercentage(taskData);
     expect(percentage).toBe(0.3333333333333333);
 
-    const noTask = [{}] as taskData[];
+    const noTask = [{}] as TaskData[];
 
     expect(getPercentage(noTask)).toBe(0);
   });

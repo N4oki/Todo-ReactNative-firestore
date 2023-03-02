@@ -14,7 +14,7 @@
 		40A82864804F988EB95A9395 /* Pods_todo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F83946F784830AFB63409F1 /* Pods_todo.framework */; };
 		51B005E54E0F105E0D135F75 /* Pods_todo_todoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 280FC796A56CC3E10E92C0E7 /* Pods_todo_todoTests.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		B03EEB05299F21D600A0FFFC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B03EEB04299F21D600A0FFFC /* GoogleService-Info.plist */; };
+		B00EF82229ADB09000DE0EF9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B00EF82129ADB09000DE0EF9 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +43,7 @@
 		5F83946F784830AFB63409F1 /* Pods_todo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_todo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = todo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		93DB6AFECE63CB27FD52E119 /* Pods-todo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-todo.debug.xcconfig"; path = "Target Support Files/Pods-todo/Pods-todo.debug.xcconfig"; sourceTree = "<group>"; };
-		B03EEB04299F21D600A0FFFC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B00EF82129ADB09000DE0EF9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B0B134AC298E5B1700BE210D /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = ../../../../AntDesign.ttf; sourceTree = "<group>"; };
 		B0B134AD298E623800BE210D /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = ../../../../Feather.ttf; sourceTree = "<group>"; };
 		B0B134AE298E624000BE210D /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = ../../../../Entypo.ttf; sourceTree = "<group>"; };
@@ -122,7 +122,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				B03EEB04299F21D600A0FFFC /* GoogleService-Info.plist */,
+				B00EF82129ADB09000DE0EF9 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* todo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* todoTests */,
@@ -263,8 +263,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				B00EF82229ADB09000DE0EF9 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				B03EEB05299F21D600A0FFFC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,18 +2,9 @@ import React from 'react';
 import {View, Text, SafeAreaView, Button} from 'react-native';
 import UserThemePicker from '../components/sidebar/UserThemePicker';
 import ProgressCircle from '../components/sidebar/ProgressCircle';
-import firestore from '@react-native-firebase/firestore';
+import {updater} from '../utils/firestoreUpdater';
 
 const SideBar = () => {
-  const deleteAll = async () => {
-    const ref = firestore().collection('todos');
-
-    ref.get().then(querySnapshot => {
-      if (querySnapshot.docs.length === 0) return;
-      Promise.all(querySnapshot.docs.map(d => d.ref.delete()));
-    });
-  };
-
   return (
     <SafeAreaView
       style={{
@@ -38,7 +29,10 @@ const SideBar = () => {
           <ProgressCircle size={150} strokeWidth={20} />
         </View>
         <UserThemePicker />
-        <Button title="Reset task" onPress={() => deleteAll()} />
+        <Button
+          title="Reset task"
+          onPress={() => updater({key: 'deleteAll'})}
+        />
       </View>
     </SafeAreaView>
   );

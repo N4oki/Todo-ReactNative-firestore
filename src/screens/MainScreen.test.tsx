@@ -15,21 +15,21 @@ describe('Main　screen', () => {
         title: 'test1',
         isDone: false,
         isEditMode: false,
-        date: '2020' as unknown as Date,
+        date: 2020,
       },
       {
         id: '2',
         title: 'test2',
         isDone: false,
         isEditMode: false,
-        date: '2021' as unknown as Date,
+        date: 2021,
       },
       {
         id: '3',
         title: 'test3',
         isDone: false,
         isEditMode: false,
-        date: '2022' as unknown as Date,
+        date: 2022,
       },
     ];
     const userData = {
@@ -51,7 +51,7 @@ describe('Main　screen', () => {
       userData,
       setUserData: jest.fn(),
     };
-    const {getByTestId, getByPlaceholderText, getByRole} = render(
+    const {getByTestId} = render(
       <AppWrapper testValue={sharedState}>
         <MainScreen />
       </AppWrapper>,

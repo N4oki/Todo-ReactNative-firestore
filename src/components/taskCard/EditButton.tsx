@@ -8,21 +8,16 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {taskData} from '../../utils/context';
+import {TaskData} from '../../utils/context';
 import CustomIcon from '../../utils/CustomIcon';
-import firestore from '@react-native-firebase/firestore';
+import {updater} from '../../utils/firestoreUpdater';
 
-const EditButton = ({task}: {task: taskData}) => {
+const EditButton = ({task}: {task: TaskData}) => {
   const opacity = useSharedValue(1);
   const AnimatedOpacity = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
 
-  const toggleEditMode = async (task: taskData) => {
-    await firestore().collection('todos').doc(task.id.toString()).update({
-      isEditMode: !task.isEditMode,
-    });
-  };
   return (
     <Animated.View
       style={[
@@ -41,7 +36,14 @@ const EditButton = ({task}: {task: taskData}) => {
       ]}
       entering={FadeInRight.duration(500)}
       exiting={FadeOutRight.duration(250)}>
-      <Pressable onPress={() => toggleEditMode(task)}>
+      <Pressable
+        onPress={() =>
+          updater({
+            key: 'toggleEditMode',
+            id: task.id,
+            editModeTask: task,
+          })
+        }>
         <CustomIcon name="edit" size={22} dir="Feather" />
       </Pressable>
     </Animated.View>

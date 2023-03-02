@@ -19,7 +19,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 const MainScreen = () => {
   const {taskData} = useAppContext();
   const colorScheme = getColorScheme().colorScheme;
-
   const windowHeight = Dimensions.get('window').height;
   const scrollViewHeight = windowHeight * 0.7 - (StatusBar.currentHeight || 0);
 

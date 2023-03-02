@@ -1,5 +1,4 @@
 import React, {useState, useRef, useEffect} from 'react';
-
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -7,20 +6,16 @@ import {
   View,
   Keyboard,
 } from 'react-native';
-import uuid from 'react-native-uuid';
-
 import Animated, {Layout} from 'react-native-reanimated';
-import {getColorScheme} from '../../utils/tools';
+import {generateUUID, getColorScheme} from '../../utils/tools';
 import AddButton from './AddButton';
 import SendButton from './SendButton';
-import firestore from '@react-native-firebase/firestore';
-import {taskData, useAppContext} from '../../utils/context';
+import {TaskData, useAppContext} from '../../utils/context';
+import {updater} from '../../utils/firestoreUpdater';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const TaskInput = () => {
-  const ref = firestore().collection('todos');
-
   const {taskData} = useAppContext();
   const [taskValue, setTaskValue] = useState('');
   const [focus, setFocus] = useState(false);
@@ -31,24 +26,32 @@ const TaskInput = () => {
   const letters = new RegExp(/[^ ]/);
   const valid = letters.test(taskValue) ? true : false;
 
-  const onPress = async (taskValue: string) => {
+  const onPress = async (
+    taskValue: string,
+    editModeTask: TaskData | undefined,
+  ) => {
     if (!taskValue) return;
-    console.log('log');
+
     const newData = {
       title: taskValue,
-      id: uuid.v4(),
+      id: generateUUID(),
       isDone: false,
-      date: new Date(),
-      isEditMode: editModeTask ? false : true,
+      date: Date.now(),
+      isEditMode: false,
     };
 
-    const docRef = editModeTask
-      ? ref.doc(editModeTask.id.toString())
-      : ref.doc();
-    await docRef.set(newData);
-
-    setTaskValue('');
-    Keyboard.dismiss();
+    try {
+      updater({
+        id: undefined,
+        key: 'addEdit',
+        newData: newData,
+        editModeTask: editModeTask,
+      });
+      setTaskValue('');
+      Keyboard.dismiss();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onAddButtonClick = () => {
@@ -61,13 +64,13 @@ const TaskInput = () => {
     }
   }, [editModeTask]);
 
-  const onBlur = async (task: taskData | undefined) => {
+  const onBlur = async (task: TaskData | undefined) => {
     setFocus(false);
-
     if (!task) return;
-
-    await firestore().collection('todos').doc(task.id.toString()).update({
-      isEditMode: !task.isEditMode,
+    updater({
+      key: 'toggleEditMode',
+      id: task.id,
+      editModeTask: editModeTask,
     });
   };
 
@@ -115,13 +118,14 @@ const TaskInput = () => {
                 fontSize: 18,
                 color: textColor,
               }}
-              onSubmitEditing={() => onPress(taskValue)}
+              onSubmitEditing={() => onPress(taskValue, editModeTask)}
               onFocus={() => setFocus(true)}
               onBlur={() => onBlur(editModeTask)}
             />
             {focus && valid && (
               <SendButton
                 taskValue={taskValue}
+                editModeTask={editModeTask}
                 onPress={onPress}
                 textColor={textColor}
               />

@@ -62,6 +62,7 @@ npm run ios
 
 - React Native - a JavaScript framework for building native mobile apps
 - Firebase Firestore - a NoSQL document database that syncs data in real time
+- Firebase auth a user authentication and identity management service which allows developers to easily integrate secure authentication into their mobile and web applications
 - Reanimated - a declarative library for building highly performant animations in React Native
 - React Native Gesture Handler - a library that enables gesture recognition and handling in React Native apps, providing more control over touch gestures and allowing for more advanced interactions
 
